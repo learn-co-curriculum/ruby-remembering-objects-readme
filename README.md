@@ -15,7 +15,7 @@ Luckily for us, Ruby allows us to do so by uses class variables to store new ins
 
 ## Using class variables to store instances of a class
 
-Imagine we are building an app that managers a user's music. Our app should keep track of all of the songs and user enters and allow our user to browse their existing songs. 
+Imagine we are building an app that managers a user's music. Our app should keep track of all of the songs our user enters and allow our user to browse their existing songs. 
 
 Let's take a look at the following class:
 
