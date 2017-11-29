@@ -3,13 +3,15 @@
 ## Objectives
 
 1. Explain the concept of remembrance in object-oriented programming. 
-2. Use class variables to remember, or store, instances of a class that are produced. 
+2. Define a class variable `@@all` and initialize it to an empty array.
+3. Build an instance method `#save` that can push the instance into `@@all`
+4. Build a class reader `.all` to expose and read `@@all`
 
 ## Introduction
 
 Let's say we're building a command line game in which players play various rounds until a final tally determines the winner. Or creating an app in which we want to store a list of all of the users who sign up. Or building a program that helps users track and store the passwords for their various accounts. 
 
-In all of these situations, and many more we can imagine, our application needs a way to store or remember a collection of class instances. Whether they are instances of a `Game`, `User` or `Password` class, all of these examples would require our program to keep track of instances that are created. 
+In all of these situations, and many more we can imagine, our application needs a way to store or remember a collection of class instances. Whether they are instances of a `Game`, `User` or `Dog` class, all of these examples would require our program to keep track of instances that are created. 
 
 Luckily for us, Ruby allows us to do so by using class variables to store new instances as soon as they are created. Let's take a look together. 
 
@@ -21,7 +23,6 @@ Let's take a look at the following class:
 
 ```ruby
 class Song
-
   attr_accessor :name
 
   def initialize(name)
@@ -33,20 +34,22 @@ end
 With this code, we can create a new song like this:
 
 ```ruby
-hotline_bling = Song.new("Hotline Bling")
+Song.new("Hotline Bling")
 ```
 
 Let's go ahead and create another song:
 
 ```ruby
-thriller = Song.new("Thriller") 
+Song.new("Thriller") 
 ```
 
-Uh-oh. Our user wants to browse their songs now and select one to play. Currently, our code in the `Song` class has no way to keep track of the songs we just created and display them back to the user. 
+How might we get a list of all the songs we just created? Since we never created references to those instances by assigning them to a local variable, the instances of the songs "Thriller" and "Hotline Bling" have effectively disappeared. They existed, but only for a brief moment with no way for us to ever get them back.
+
+It would be great if we could rely on the `Song` class to remember all the songs, maybe even through a class method `Song.all` that returns all the songs ever created.
 
 ### Creating the Class Variable
 
-Let's take a step back and think about the concept of responsibility. Whose job is it to know about *every instance of the `Song` class*? We have two choices right now: an instance of the song class or the `Song` class itself.
+Let's take a step back and think about the concept of responsibility. Whose job is it to know about **every instance of a `Song`**? We have two choices right now: an instance of a `Song` or the `Song` class itself.
 
 It is not the responsibility of an individual song to know about all of the other songs. Keeping track of all of the songs that it creates, however, fits right into the purview of the Song class. 
 
@@ -56,10 +59,9 @@ Let's create a class variable, `@@all`, that will store every instance of the `S
 
 ```ruby
 class Song
-	
-  @@all = []
-	
   attr_accessor :name
+
+  @@all = []
 
   def initialize(name)
     @name = name
