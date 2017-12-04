@@ -173,7 +173,7 @@ Song.new("Thriller")
 Song.all # => NoMethodError: undefined method `all' for Song:Class
 ```
 
-Looks like we don't have a class method to access the contents of the `@@all` array. That sounds right, we did not define a class method to access the contents of the `@@all`. Just like how we've built reader methods that expose the value of instance variables, we need to build a method that will expose, or make accessible outside of the class, the value of a class variable. 
+Looks like we don't have a class method to access the contents of the `@@all` array. That sounds right, we did not define a class method to access the contents of the `@@all` class variable. Just like we had to define reader methods to expose the value of instance variables, we need to define class methods which expose, or make accessible outside of the class, the value of a class variable. 
 
 Let's build one now.
 
@@ -231,12 +231,12 @@ end
 Song.new("99 Problems")
 Song.new("Thriller")
 
-Song.all # Should output something like [#<Song:0x00007fc41902c738 @name="99 Problems">, #<Song:0x00007fc4189bc9e8 @name="Thriller">]
+Song.all # => Should output something like [#<Song:0x00007fc41902c738 @name="99 Problems">, #<Song:0x00007fc4189bc9e8 @name="Thriller">]
 ```
 
 We did it! We used a class variable to store a collection of song instances. We added new instances to this storage container every time a new instance was created with the help of the `self` keyword in our `#initialize` method. Lastly, we wrote a class method to expose our song instances collection.
 
-Let say we want a way to play all our songs. We could use the `.all` to obtain a reference to the songs collection and then call the `#play` method on each instance of a song. See the code below:
+Now let's use our newly acquired ability to track all song instance to build something fun. Let say we want a way to play our whole music library. We could use the `.all` class method to obtain a reference to the songs collection and then call the `#play` method on each instance of a song. See the code below:
 
 
 ```ruby
@@ -260,7 +260,7 @@ class Song
   end
 
   def self.play_all_songs
-    self.all.each {|song|song.play}
+    all.each {|song|song.play}
   end
 end
 
