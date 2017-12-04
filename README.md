@@ -9,7 +9,7 @@
 
 Let's say we're building a program to organize and explore our music library, or something to help us track and store the passwords for all of our internet accounts.
 
-In all of these situations, and many more we can imagine, our application will instantiate instances of the classes we design. These instances are what bring the code we write into existance. It would do us little good to write our program, bring it into existance and have to no way to refer to it, no way to actually use the instances we created. Let's take a look at the following example:
+In all of these situations, our application will instantiate instances of the classes we design. These instances are what bring the code we write into existence. It would do us little good to write our program, bring it into existence and have to no way to refer to it, no way to use the instances we created. Let's take a look at the following example:
 
 ```ruby
 class Song
@@ -27,9 +27,9 @@ end
 Song.new("Thriller") 
 ```
 
-We now have an instance of the "Thriller" song and lucky for us the instance knows how to play itself. How can we play it? Sadly we can't. When we instantiated the "Thriller" song we did not save a reference to it. We have no way of telling the song to play itself.
+We now have an instance of the "Thriller" song and lucky for us the instance knows how to play itself. How can we play it? Sadly we can't. When we instantiated the "Thriller" song, but we did not save a reference to it. We have no way of telling the song to play itself (calling the `#play` method or sending the `play` message to the song instance in Object Oriented parlance).
 
-What is a first step to solve this problem? Let's now save a reference to the song we instantiate.
+What is a first step towards solving this problem? Let's now save a reference to the song we instantiate.
 
 ```ruby
 class Song
@@ -51,21 +51,22 @@ thriller.play
 
 By saving a reference to the instance of the "Thriller" song to a local variable we now have a way to play the song.
 
-What happens if during our Flatiron graduation party we want to play all of our songs? We would need to **manually gather** all the references to our song instances and cycle through them to ask each song to play itself. Wouldn't it make sense to automatically create a collection that records a reference to each song instance as instantiate them? Anytime we want to act on the entirety of our music library we could simply refer to the colleciton.
+What happens if during our Flatiron graduation party we want to play all our songs? We would need to **manually gather** all the references to our song instances and cycle through them to ask each song to play itself. Wouldn't it make sense to automatically create a collection that records a reference to each song as we instantiate them? Anytime we want to act on the entirety of our music library we could refer to the collection.
 
-Whether we are working with instances of an `Artist`, `Song` or `Password` class, all of these examples would require our program to keep track of instances that are created. Luckily for us, Ruby allows us to do so by using class variables to store new instances as soon as they are created. Let's take a look together. 
+Whether we are working with instances of a `Song` or `Password` class, all of these examples would require our program to keep track of instances that are created. Luckily for us, Ruby allows us to do so by using class variables to store new instances as soon as they are created. Let's take a look together.
+
 
 ## Using class variables to store instances of a class
 
-Let's rethink the app to manage our music library. We now want to automatically keep track of all of the songs we instantiate, this allows for fun things such as browse our whole music library.
+Let's rethink our music library application. We want to automatically keep track of all song instances. This feature would enable us to easily add fun features such as a method to play all of our songs.
 
 ### Creating the Class Variable
 
-Let's take a step back and think about the concept of responsibility. Whose job is it to know about *every instance of the `Song` class*? We have two choices right now: an instance of the song class or the `Song` class itself.
+Let's take a step back and think about the concept of responsibility. Whose job is it to know about *every instance of the `Song` class*? We have two choices right now: an instance of the `Song` class or the `Song` class itself.
 
 It is not the responsibility of an individual song to know about all of the other songs. Keeping track of all of the songs that it creates, however, fits right into the purview of the Song class. 
 
-So, how can we tell the `Song` class to keep track of every instance that it creates? We use a class variable. 
+So, how can we tell the `Song` class to keep track of every instance that it creates? We can use a class variable. 
 
 Let's create a class variable, `@@all`, that will store every instance of the `Song` class. Recall that `@@` before a variable name is how we define a class variable.
 
@@ -118,7 +119,7 @@ class Song
 end
 ```
 
-In `#initialize` we use the `self` keyword to refer to the new object that has just been created by `#new`. Remember that when `#new` is called, it creates a new instance of the class and then calls `#initialize` on that new instance. So, `#initialize` is technically an instance method. Inside an instance method we are in what is called **method scope** and `self` will refer to whichever instance the method is being called on. 
+In `#initialize` we use the `self` keyword to refer to the new song instance that has just been created by `#new`. Remember that when `#new` is called, it creates a new instance of the class and then calls `#initialize` on that new instance. So, `#initialize` is technically an instance method. Inside an instance method we are in what is called **method scope** and `self` will refer to whichever instance the method is being called on. 
 
 We push `self` into the array that is stored in `@@all`. In this way, the `@@all` class variable will point to an ever-growing array that contains every instance of the `Song` class that gets created. 
 
@@ -127,6 +128,22 @@ We push `self` into the array that is stored in `@@all`. In this way, the `@@all
 Let's see what happens when we actually execute the code we've written:
 
 ```ruby
+class Song
+  
+  @@all = []
+  
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+    @@all << self
+  end
+
+  def play
+    "Playing #{self.name}"
+  end
+end
+
 Song.new("99 Problems")
 Song.new("Thriller")
 ```
@@ -134,8 +151,26 @@ Song.new("Thriller")
 Now that we've created some songs, let's ask our `Song` class to show us all of the instances that we just created:
 
 ```ruby
-Song.all
-  => NoMethodError: undefined method `all' for Song:Class
+class Song
+  
+  @@all = []
+  
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+    @@all << self
+  end
+
+  def play
+    "Playing #{self.name}"
+  end
+end
+
+Song.new("99 Problems")
+Song.new("Thriller")
+
+Song.all # => NoMethodError: undefined method `all' for Song:Class
 ```
 
 Looks like we don't have a class method to access the contents of the `@@all` array. That sounds right, we did not define a class method to access the contents of the `@@all`. Just like how we've built reader methods that expose the value of instance variables, we need to build a method that will expose, or make accessible outside of the class, the value of a class variable. 
@@ -233,8 +268,8 @@ Song.new("99 Problems")
 Song.new("Thriller")
 
 Song.play_all_songs # Will output:
-# Playing 99 Problems
-# Playing Thriller
+"Playing 99 Problems"
+"Playing Thriller"
 ```
 
 <p data-visibility='hidden'>View <a href='https://learn.co/lessons/ruby-remembering-objects-readme' title='Ruby Object Remembrance'>Ruby Object Remembrance</a> on Learn.co and start learning to code for free.</p>
