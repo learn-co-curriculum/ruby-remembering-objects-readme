@@ -53,7 +53,7 @@ By saving a reference to the instance of the "Thriller" song to a local variable
 
 What happens if during our Flatiron graduation party we want to play all our songs? We would need to **manually gather** all the references to our song instances and cycle through them to ask each song to play itself. Wouldn't it make sense to automatically create a collection that records a reference to each song as we instantiate them? Anytime we want to act on the entirety of our music library we could refer to the collection.
 
-Whether we are working with instances of a `Song` or `Password` class, all of these examples would require our program to keep track of instances that are created. Luckily for us, Ruby allows us to do so by using class variables to store new instances as soon as they are created. Let's take a look together.
+Whether we are writing code to manage Songs or Passwords, our program should know how to keep track of the instances it creates. Luckily for us, Ruby allows us to do so by using class variables to store new instances as soon as they are created. Let's take a look together.
 
 
 ## Using class variables to store instances of a class
