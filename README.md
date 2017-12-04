@@ -27,7 +27,7 @@ end
 Song.new("Thriller") 
 ```
 
-We now have an instance of the "Thriller" song and lucky for us the instance knows how to play itself. How can we play it? Sadly we can't. When we instantiated the "Thriller" song, but we did not save a reference to it. We have no way of telling the song to play itself (calling the `#play` method or sending the `play` message to the song instance in Object Oriented parlance).
+We now have an instance of the "Thriller" song and lucky for us the instance knows how to play itself. How can we play it? Sadly we can't. When we instantiated the "Thriller" song we did not save a reference to it. We have no way of telling the song to play itself (calling the `#play` method or sending the `play` message to the song instance in Object Oriented parlance).
 
 What is a first step towards solving this problem? Let's now save a reference to the song we instantiate.
 
